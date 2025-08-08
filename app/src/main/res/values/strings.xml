@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Картач</string>
+    <string name="add_card">Добавить карту</string>
+    <string name="store_name">Название магазина</string>
+    <string name="card_number">Номер карты</string>
+    <string name="card_type">Тип карты</string>
+    <string name="barcode">Штрихкод</string>
+    <string name="scan_barcode">Отсканировать штрихкод</string>
+    <string name="save_card">Сохранить карту</string>
+    <string name="discount_card">Скидочная</string>
+    <string name="bonus_card">Бонусная</string>
+    <string name="show_to_cashier">Покажите этот экран кассиру для сканирования</string>
+    <string name="no_cards">Нет добавленных карт</string>
+    <string name="add_first_card">Нажмите + чтобы добавить первую карту</string>
+</resources>

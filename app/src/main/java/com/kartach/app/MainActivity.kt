@@ -13,11 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Инициализация репозитория
-        cardRepository = CardRepository.getInstance()
+        cardRepository = CardRepository.getInstance(this)
 
         initViews()
         setupRecyclerView()
@@ -145,8 +147,10 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Удалить карту?")
             .setMessage("Карта ${card.storeName} будет удалена безвозвратно")
             .setPositiveButton("Удалить") { _, _ ->
-                cardRepository.deleteCard(card)
-                loadCards()
+                lifecycleScope.launch {
+                    cardRepository.deleteCard(card)
+                    loadCards()
+                }
             }
             .setNegativeButton("Отмена", null)
             .show()
@@ -205,8 +209,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadCards() {
-        allCards = cardRepository.getAllCards()
-        filterCards(searchEdit.text.toString())
+        lifecycleScope.launch {
+            allCards = cardRepository.getAllCardsList()
+            filterCards(searchEdit.text.toString())
+        }
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {

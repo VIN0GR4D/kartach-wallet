@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.launch
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
@@ -24,7 +26,7 @@ class CardDisplayActivity : AppCompatActivity() {
         supportActionBar?.title = "Карта магазина"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        cardRepository = CardRepository.getInstance()
+        cardRepository = CardRepository.getInstance(this)
 
         initViews()
         loadCard()
@@ -49,8 +51,10 @@ class CardDisplayActivity : AppCompatActivity() {
             return
         }
 
-        val card = cardRepository.getCardById(cardId)
-        card?.let { displayCard(it) } ?: finish()
+        lifecycleScope.launch {
+            val card = cardRepository.getCardById(cardId)
+            card?.let { displayCard(it) } ?: finish()
+        }
     }
 
     private fun displayCard(card: Card) {

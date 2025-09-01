@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class AddCardActivity : AppCompatActivity() {
     private lateinit var cardRepository: CardRepository
@@ -34,7 +36,7 @@ class AddCardActivity : AppCompatActivity() {
         supportActionBar?.title = "Добавить карту"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        cardRepository = CardRepository.getInstance()
+        cardRepository = CardRepository.getInstance(this)
 
         initViews()
         setupSpinner()
@@ -88,9 +90,11 @@ class AddCardActivity : AppCompatActivity() {
             barcodeFormat = "CODE_128" // Можно определять автоматически
         )
 
-        cardRepository.insertCard(card)
-        Toast.makeText(this, "Карта сохранена", Toast.LENGTH_SHORT).show()
-        finish()
+        lifecycleScope.launch {
+            cardRepository.insertCard(card)
+            Toast.makeText(this@AddCardActivity, "Карта сохранена", Toast.LENGTH_SHORT).show()
+            finish()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
